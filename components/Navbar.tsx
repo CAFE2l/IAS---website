@@ -37,14 +37,14 @@ export default function Navbar() {
               className="w-10 h-10 rounded-full bg-navy-800 flex items-center justify-center overflow-hidden"
             >
               <Image
-                src="/images/logo-claro.png"
+                src="/images/favicon.png"
                 alt="IAS Logo"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
                 className="object-contain"
               />
             </motion.div>
-            <span className="hidden sm:block font-serif text-navy-900 text-xl font-bold">
+            <span className={`hidden sm:block font-serif text-xl font-bold transition-colors duration-300 ${scrolled ? 'text-navy-900' : 'text-ivory'}`}>
               Instituto de Aprendizado Social
             </span>
           </Link>
@@ -55,7 +55,7 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-navy-900 hover:text-navy-600 font-sans transition-colors duration-200"
+                className={`font-sans transition-colors duration-300 ${scrolled ? 'text-navy-900 hover:text-navy-600' : 'text-ivory hover:text-navy-200'}`}
               >
                 {item.name}
               </Link>
@@ -64,22 +64,22 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-navy-100 transition-colors duration-200"
+            className="md:hidden p-2 rounded-lg hover:bg-navy-100/50 transition-colors duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
             <svg
-              className="w-6 h-6 text-navy-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+      className={`w-6 h-6 transition-colors duration-300 ${scrolled ? 'text-navy-900' : 'text-ivory'}`}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      {isMenuOpen ? (
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      ) : (
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+      )}
+    </svg>
           </button>
         </div>
       </div>

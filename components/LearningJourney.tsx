@@ -10,34 +10,28 @@ const journeySteps = [
     title: 'Conhecer',
     description: 'Explore ideias e desenvolva compreensão sobre novos conceitos e possibilidades.',
     icon: BookOpen,
-    color: 'bg-navy-700',
-    glow: 'blue-glow',
   },
   {
     id: 2,
     title: 'Experimentar',
     description: 'Aplique o conhecimento por meio de atividades práticas e desafios colaborativos.',
     icon: TestTube,
-    color: 'bg-navy-600',
-    glow: 'blue-glow',
   },
   {
     id: 3,
     title: 'Colaborar',
     description: 'Troque perspectivas e construa projetos juntos ao longo de feedback contínuo.',
     icon: Users,
-    color: 'bg-navy-500',
-    glow: 'blue-glow',
   },
   {
     id: 4,
     title: 'Compartilhar',
     description: 'Documente sua jornada e torne suas contribuições visíveis e acessíveis.',
     icon: Share2,
-    color: 'bg-navy-400',
-    glow: 'blue-glow',
   },
 ];
+
+const stepColors = ['bg-navy-700', 'bg-navy-600', 'bg-navy-500', 'bg-navy-400'];
 
 export default function LearningJourney() {
   const [activeStep, setActiveStep] = useState<number | null>(null);
@@ -81,14 +75,16 @@ export default function LearningJourney() {
 
         {/* Journey Diagram */}
         <div className="relative">
-          {/* Horizontal connecting line */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="absolute top-1/2 left-0 right-0 h-1 bg-navy-300/50 transform -translate-y-1/2 z-0"
-          />
+          {/* Mobile: Vertical Line */}
+          <div className="md:hidden">
+            <div className="absolute left-1/2 top-12 bottom-12 w-1 bg-navy-300/50 transform -translate-x-1/2 z-0" />
+          </div>
+
+          {/* Desktop: Horizontal Line - positioned based on icon center */}
+          <div className="hidden md:block">
+            {/* Line container that spans from icon center to icon center */}
+            <div className="absolute top-1/2 left-12 right-12 h-1 bg-navy-300/50 transform -translate-y-1/2 z-0" />
+          </div>
 
           {/* Steps */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
@@ -107,7 +103,7 @@ export default function LearningJourney() {
                 >
                   {/* Icon Container */}
                   <motion.div
-                    className={`w-20 h-20 mx-auto rounded-full ${step.color} ${step.glow} flex items-center justify-center mb-6 transition-all duration-300`}
+                    className={`w-20 h-20 mx-auto rounded-full ${stepColors[index]} flex items-center justify-center transition-all duration-300`}
                     style={{
                       boxShadow: activeStep === step.id 
                         ? '0 0 20px rgba(19, 154, 205, 0.6)'
@@ -117,19 +113,8 @@ export default function LearningJourney() {
                     <Icon className="w-8 h-8 text-ivory" />
                   </motion.div>
 
-                  {/* Step Number */}
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
-                    className="absolute -top-3 -right-3 w-8 h-8 bg-navy-900 text-ivory rounded-full flex items-center justify-center font-bold text-sm"
-                  >
-                    {step.id}
-                  </motion.div>
-
                   {/* Content */}
-                  <h3 className="font-serif text-navy-900 text-2xl mb-3">{step.title}</h3>
+                  <h3 className="font-serif text-navy-900 text-2xl mb-3 mt-4">{step.title}</h3>
                   <motion.p
                     className="font-sans text-navy-600 text-sm leading-relaxed px-4"
                     initial={{ opacity: 0 }}

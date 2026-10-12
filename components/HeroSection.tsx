@@ -98,7 +98,7 @@ export default function HeroSection() {
               className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center border-2 border-ivory/30 overflow-hidden"
             >
               <Image
-                src="/images/logo-claro.png"
+                src="/images/favicon.png"
                 alt="IAS Logo"
                 width={48}
                 height={48}
@@ -106,7 +106,7 @@ export default function HeroSection() {
               />
             </motion.div>
             <div className="hidden md:block text-left">
-              <span className="font-serif text-ivory/80 text-sm tracking-wider">Instituto de</span>
+              <span className="font-serif text-ivory text-sm tracking-wider">Instituto de</span>
               <span className="font-serif text-ivory text-2xl font-bold leading-none">Aprendizado Social</span>
             </div>
           </div>

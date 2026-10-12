@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: var(--font-inter);
+    font-weight: 400;
+    line-height: 1.6;
+    color: #082B68;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-dm-serif);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #082B68;
+  }
+  
+  .text-ivory {
+    color: #FFFBF3;
+  }
+  
+  .text-navy {
+    color: #082B68;
+  }
+  
+  .text-navy-dark {
+    color: #061D46;
+  }
+  
+  .bg-navy {
+    background-color: #082B68;
+  }
+  
+  .bg-navy-dark {
+    background-color: #061D46;
+  }
+  
+  .border-silver {
+    border-color: #C5CDD1;
+  }
+}
+
+@layer utilities {
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 8px 32px rgba(8, 43, 104, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .glass-dark {
+    background: rgba(8, 43, 104, 0.3);
+    box-shadow: 0 8px 32px rgba(8, 43, 104, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .blue-glow {
+    box-shadow: 
+      0 0 1px rgba(19, 154, 205, 0.5),
+      0 0 2px rgba(19, 154, 205, 0.3),
+      0 0 4px rgba(19, 154, 205, 0.2),
+      0 0 8px rgba(19, 154, 205, 0.1);
+  }
+  
+  .blue-edge {
+    position: relative;
+  }
+  
+  .blue-edge::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(45deg, transparent, rgba(19, 154, 205, 0.4), transparent);
+    z-index: -1;
+  }
+}

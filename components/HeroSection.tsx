@@ -1,45 +1,37 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const floatingY = [
-  { y: -10, transition: { duration: 6, ease: 'easeInOut', repeat: Infinity, repeatType: 'loop' as const } },
-  { y: 10, transition: { duration: 6, ease: 'easeInOut', repeat: Infinity, repeatType: 'loop' as const } },
-];
+type Star = { x: number; y: number; size: number; delay: number };
 
 export default function HeroSection() {
-  const [scrollY, setScrollY] = useState(0);
-  const [prefersReduced, setPrefersReduced] = useState(false);
-  
+  const prefersReduced = useReducedMotion();
+
+  // Scroll-driven values live outside React state, so scrolling no longer re-renders the whole hero.
+  const { scrollY } = useScroll();
+  const parallaxRotate = useTransform(scrollY, (v) => v * 0.02);
+  const float1X = useTransform(scrollY, (v) => Math.sin(v * 0.01) * 20);
+  const float2X = useTransform(scrollY, (v) => Math.cos(v * 0.008) * 30);
+  const float3X = useTransform(scrollY, (v) => Math.cos(v * 0.012) * 40);
+
+  // FIX for the hydration error: the stars are random, so they are created
+  // only on the client, after mount. The server renders an empty list and
+  // the client fills it in, so the two HTML outputs always match.
+  const [stars, setStars] = useState<Star[]>([]);
+
   useEffect(() => {
-    const checkReducedMotion = () => {
-      setPrefersReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    };
-    
-    checkReducedMotion();
-    window.addEventListener('resize', checkReducedMotion);
-    
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', checkReducedMotion);
-    };
+    setStars(
+      Array.from({ length: 30 }, (_, i) => ({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 4 + 2,
+        delay: i * 0.1,
+      }))
+    );
   }, []);
-
-  const parallaxRotate = typeof window !== 'undefined' ? scrollY * 0.02 : 0;
-
-  const stars = Array.from({ length: 30 }, (_, i) => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    delay: i * 0.1,
-  }));
 
   return (
     <section id="hero" className="relative h-screen min-h-screen flex items-center justify-center overflow-hidden">
@@ -51,8 +43,8 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5 }}
         />
-        
-        {/* Starfield */}
+
+        {/* Starfield (client-only) */}
         <div className="absolute inset-0">
           {stars.map((star, i) => (
             <motion.div
@@ -74,7 +66,7 @@ export default function HeroSection() {
         </div>
 
         {/* Atmospheric Overlay */}
-        <motion.div 
+        <motion.div
           className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -96,14 +88,17 @@ export default function HeroSection() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.6, delay: 0.3, type: 'spring', stiffness: 100 }}
-              className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center border-2 border-ivory/30 overflow-hidden"
+              className="relative w-16 h-16 rounded-full border-2 border-ivory/30 overflow-hidden"
             >
+              {/* White version of the icon (favicon2.png) for the dark background.
+                  The Image fills the whole circle. Adjust scale-125 (1.1 to 1.5) until no empty edge shows. */}
               <Image
-                src="/favicon.png"
+                src="/favicon2.png"
                 alt="IAS Logo"
-                width={48}
-                height={48}
-                className="object-cover"
+                fill
+                sizes="64px"
+                className="object-cover scale-125"
+                priority
               />
             </motion.div>
             <span className="font-serif text-ivory text-xl font-bold leading-tight">Instituto de Aprendizado Social</span>
@@ -128,7 +123,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="font-sans text-navy-200 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
         >
-          Um ponto de encontro para transformar conhecimento em experiência, conectar pessoas e 
+          Um ponto de encontro para transformar conhecimento em experiência, conectar pessoas e
           construir possibilidades por meio da colaboração.
         </motion.p>
 
@@ -147,7 +142,7 @@ export default function HeroSection() {
               Experimentar
             </Link>
           </motion.div>
-          
+
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/login"
@@ -163,14 +158,14 @@ export default function HeroSection() {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
           className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-br from-navy-600 to-navy-800 opacity-20"
-          style={{ transform: `rotate(${parallaxRotate}deg)` }}
-          animate={{ 
+          style={{ rotate: parallaxRotate }}
+          animate={{
             scale: [1, 1.1, 1],
-            opacity: [0.15, 0.2, 0.15]
+            opacity: [0.15, 0.2, 0.15],
           }}
           transition={{ duration: 8, repeat: Infinity }}
         />
-        
+
         {/* Central Orbital Ring */}
         {prefersReduced ? null : (
           <motion.div
@@ -181,45 +176,44 @@ export default function HeroSection() {
             <motion.div
               className="absolute top-4 -left-4 w-8 h-8 rounded-full bg-blue-400/40"
               style={{ boxShadow: '0 0 8px rgba(19, 154, 205, 0.4)' }}
-              animate={{ 
+              animate={{
                 x: [0, 40, 0],
-                y: [0, -40, 0]
+                y: [0, -40, 0],
               }}
               transition={{ duration: 3, repeat: Infinity }}
             />
             <motion.div
               className="absolute bottom-4 -right-4 w-8 h-8 rounded-full bg-blue-400/40"
               style={{ boxShadow: '0 0 8px rgba(19, 154, 205, 0.4)' }}
-              animate={{ 
+              animate={{
                 x: [0, -40, 0],
-                y: [0, 40, 0]
+                y: [0, 40, 0],
               }}
               transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
             />
           </motion.div>
         )}
-        
-        {/* Floating Elements */}
+
+        {/* Floating Elements.
+            Scroll movement uses x (style) and the float animation uses y (animate),
+            so the two no longer fight over the same property. */}
         {prefersReduced ? null : (
           <>
             <motion.div
               className="absolute top-1/4 left-1/4 w-12 h-12 rounded-full bg-blue-500/30 flex items-center justify-center"
-              style={{ x: Math.sin(scrollY * 0.01) * 20 }}
+              style={{ x: float1X }}
               animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 6, ease: 'easeInOut', repeat: Infinity }}
             />
             <motion.div
               className="absolute top-3/4 right-1/4 w-8 h-8 rounded-full bg-blue-400/40"
-              style={{ y: Math.cos(scrollY * 0.008) * 30 }}
+              style={{ x: float2X }}
               animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 6, ease: 'easeInOut', repeat: Infinity, delay: 1 }}
             />
             <motion.div
               className="absolute bottom-1/4 left-1/3 w-10 h-10 border-2 border-blue-300/50 rounded-full flex items-center justify-center"
-              style={{ 
-                x: Math.cos(scrollY * 0.012) * 40,
-                y: Math.sin(scrollY * 0.006) * 40 
-              }}
+              style={{ x: float3X }}
               animate={{ y: [-8, 8, -8] }}
               transition={{ duration: 5, ease: 'easeInOut', repeat: Infinity, delay: 1.5 }}
             >

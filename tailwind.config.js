@@ -55,6 +55,9 @@ module.exports = {
       backdropBlur: {
         xs: '2px',
       },
+      spacing: {
+        '13': '3.25rem',
+      },
       boxShadow: {
         'glass': '0 8px 32px rgba(8, 43, 104, 0.1), 0 4px 16px rgba(8, 43, 104, 0.05)',
         'card': '0 4px 20px rgba(8, 43, 104, 0.08)',

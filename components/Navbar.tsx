@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -18,19 +18,54 @@ const authItems = [
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [isDarkSection, setIsDarkSection] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    // Track section visibility to determine navbar text color
+    const sections = document.querySelectorAll('section[id]');
+    
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const section = entry.target as HTMLElement;
+            // Check if section has dark background
+            const isDark = section.classList.contains('bg-navy-800') || 
+                          section.classList.contains('bg-navy-900') ||
+                          section.classList.contains('from-navy-800') ||
+                          section.classList.contains('to-navy-500') ||
+                          section.classList.contains('from-[#041B3F]') ||
+                          section.classList.contains('to-[#06122B]');
+            
+            // If the section taking up most of the viewport is dark, use white text
+            if (entry.intersectionRatio > 0.3) {
+              setIsDarkSection(isDark);
+            }
+          }
+        });
+      },
+      {
+        threshold: [0.1, 0.3, 0.5],
+        rootMargin: '-80px 0px -50% 0px', // Top of viewport detection
+      }
+    );
+
+    sections.forEach((section) => {
+      observerRef.current?.observe(section);
+    });
+
+    return () => {
+      observerRef.current?.disconnect();
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const textColor = isDarkSection ? '#FFFBF3' : '#082B68';
+  const navbarBg = 'bg-navy-900/95 backdrop-blur-md shadow-md';
+
   return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-ivory/95 backdrop-blur-md shadow-md' : 'bg-gradient-to-b from-black/30 to-transparent'}`}>
+    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${navbarBg}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
@@ -49,7 +84,7 @@ export default function Navbar() {
                 className="object-cover"
               />
             </motion.div>
-            <span className="hidden sm:block font-serif text-xl font-bold transition-colors duration-300" style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}>
+            <span className="hidden sm:block font-serif text-xl font-bold transition-colors duration-300" style={{ color: textColor }}>
               Instituto de Aprendizado Social
             </span>
           </Link>
@@ -60,8 +95,8 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`font-sans transition-colors duration-300`}
-                style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}
+                className="font-sans transition-colors duration-300 hover:opacity-80"
+                style={{ color: textColor }}
               >
                 {item.name}
               </Link>
@@ -69,8 +104,8 @@ export default function Navbar() {
             {/* Entrar link */}
             <Link
               href="/login"
-              className="font-sans text-sm transition-colors duration-300"
-              style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}
+              className="font-sans text-sm transition-colors duration-200 hover:opacity-80"
+              style={{ color: textColor }}
             >
               Entrar
             </Link>
@@ -78,7 +113,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-navy-100/50 transition-colors duration-200"
+            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -87,7 +122,7 @@ export default function Navbar() {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              style={{ stroke: scrolled ? '#082B68' : '#FFFBF3' }}
+              style={{ stroke: textColor }}
             >
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -104,14 +139,14 @@ export default function Navbar() {
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: isMenuOpen ? 'auto' : 0 }}
         transition={{ duration: 0.3 }}
-        className="md:hidden overflow-hidden bg-ivory/95 backdrop-blur-md"
+        className="md:hidden overflow-hidden bg-navy-900/95 backdrop-blur-md"
       >
         <nav className="px-4 py-4 space-y-2">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="block text-navy-900 hover:text-navy-600 font-sans transition-colors duration-200 py-2"
+              className="block text-white hover:text-white/80 font-sans transition-colors duration-200 py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               {item.name}
@@ -120,7 +155,7 @@ export default function Navbar() {
           <Link
             key="entrar"
             href="/login"
-            className="block text-navy-900 hover:text-navy-600 font-sans transition-colors duration-200 py-2"
+            className="block text-white hover:text-white/80 font-sans transition-colors duration-200 py-2"
             onClick={() => setIsMenuOpen(false)}
           >
             Entrar

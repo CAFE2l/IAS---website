@@ -19,20 +19,6 @@ export default function ClosingSection() {
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ duration: 25, repeat: Infinity, delay: 5 }}
         />
-        
-        {/* Blue LED Pattern */}
-        <div className="absolute top-0 left-0 right-0 h-20">
-          <div className="flex justify-center space-x-4 mt-4">
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="w-3 h-3 rounded-full bg-blue-400/50"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}
-              />
-            ))}
-          </div>
-        </div>
       </div>
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -48,14 +34,15 @@ export default function ClosingSection() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.6, delay: 0.3, type: 'spring', stiffness: 100 }}
-              className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center border-2 border-ivory/30 overflow-hidden"
+              className="relative w-16 h-16 rounded-full border-2 border-ivory/30 overflow-hidden"
             >
               <Image
-                src="/favicon.png"
+                src="/favicon2.png"
                 alt="IAS Logo"
-                width={48}
-                height={48}
-                className="object-cover"
+                fill
+                sizes="64px"
+                className="object-cover scale-125"
+                priority
               />
             </motion.div>
             <span className="font-serif text-ivory text-xl font-bold leading-tight">Instituto de Aprendizado Social</span>

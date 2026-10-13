@@ -34,18 +34,9 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="hero" className="relative h-screen min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated Background */}
+    <section id="hero" className="relative h-screen min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy-800 via-navy-700 to-navy-500">
+      {/* Starfield (client-only) */}
       <div className="absolute inset-0">
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-navy-800 via-navy-700 to-navy-500"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-        />
-
-        {/* Starfield (client-only) */}
-        <div className="absolute inset-0">
           {stars.map((star, i) => (
             <motion.div
               key={i}
@@ -72,7 +63,6 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         />
-      </div>
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">

@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     domains: [],
   },
-  // Key: let the build output to a temporary directory
+
   distDir: process.env.NEXT_DIST_DIR || ".next",
 };
 

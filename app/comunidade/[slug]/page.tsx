@@ -57,16 +57,26 @@ export default function ForumPostPage() {
 
       setUser(authUser);
 
-      // Fetch post
-      let query = supabase
+      // Fetch post by slug or id
+      const { data: postData, error } = await supabase
         .from('forum_posts')
-        .select('*, user:users(*), comments:comments(*, user:users(*), replies:comments(*)')
-        .or(`slug.eq.${slug},id.eq.${slug}`);
-
-      const { data: postData, error } = await query.single();
+        .select('*, user:users(*), comments:comments(*, user:users(*))')
+        .eq('slug', slug)
+        .single();
 
       if (!error && postData) {
         setPost(postData as any);
+      } else if (!error) {
+        // Fallback to id if slug doesn't match
+        const { data: postById } = await supabase
+          .from('forum_posts')
+          .select('*, user:users(*), comments:comments(*, user:users(*))')
+          .eq('id', slug)
+          .single();
+        
+        if (postById) {
+          setPost(postById as any);
+        }
       }
 
       setLoading(false);

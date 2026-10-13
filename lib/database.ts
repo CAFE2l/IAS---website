@@ -9,18 +9,18 @@ const createPool = () => {
   if (!connectionString) {
     // Return a mock pool for build time or when not configured
     return {
-      query: async (text: string, params?: any[]) => {
+      query: async <T = any>(text: string, params?: any[]): Promise<{ rows: T[]; rowCount: number }> => {
         throw new Error('Database not configured');
       },
       end: async () => {},
       on: () => {},
-      connect: async () => ({ 
-        query: async () => ({ rows: [], rowCount: 0 }), 
-        release: () => {} 
-      })
+      connect: async () => ({
+        query: async () => ({ rows: [], rowCount: 0 }),
+        release: () => {},
+      }),
     } as any;
   }
-  
+
   return new Pool({
     connectionString,
     ssl: {

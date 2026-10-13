@@ -4,8 +4,10 @@ const nextConfig = {
   images: {
     domains: [],
   },
-
-  distDir: process.env.NEXT_DIST_DIR || ".next",
+  // isolatedDevBuild is true by default in Next.js 16
+  experimental: {
+    isolatedDevBuild: true,
+  },
 };
 
 module.exports = nextConfig;

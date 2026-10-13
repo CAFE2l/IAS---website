@@ -138,7 +138,7 @@ export function useAuthRedirect() {
 // ============================================================================
 
 export function onAuthStateChange(callback: (user: User | null) => void) {
-  const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
     if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
       const user = await getCurrentUser();
       callback(user);

@@ -41,7 +41,7 @@ export async function query<T = any>(
   params?: (string | number | boolean | null)[]
 ): Promise<{ rows: T[]; rowCount: number }> {
   const start = Date.now();
-  const res = await pool.query<T>(text, params);
+  const res = await pool.query(text, params);
   const duration = Date.now() - start;
   console.log('Executed query', { text, duration, rows: res.rowCount });
   return res;
@@ -52,7 +52,7 @@ export async function queryOne<T = any>(
   text: string,
   params?: (string | number | boolean | null)[]
 ): Promise<T | null> {
-  const res = await pool.query<T>(text, params);
+  const res = await pool.query(text, params);
   return res.rows[0] || null;
 }
 
@@ -61,7 +61,7 @@ export async function queryAll<T = any>(
   text: string,
   params?: (string | number | boolean | null)[]
 ): Promise<T[]> {
-  const res = await pool.query<T>(text, params);
+  const res = await pool.query(text, params);
   return res.rows;
 }
 

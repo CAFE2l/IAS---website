@@ -340,7 +340,7 @@ export const ForumAPI = {
         .select('vote_type')
         .eq('post_id', postId);
       
-      const total = votes?.reduce((sum, v) => sum + v.vote_type, 0) || 0;
+      const total = votes?.reduce((sum: any, v: any) => sum + v.vote_type, 0) || 0;
       await supabase
         .from('forum_posts')
         .update({ votes: total })

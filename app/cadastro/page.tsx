@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import AuthLayout from '../../components/AuthLayout';
 import Link from 'next/link';
+import { supabase } from '../../lib/supabase';
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -11,7 +13,7 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string; confirmPassword?: string }>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const router = useRouter();
 
   const validateEmail = (value: string) => {
     if (!value) {
@@ -49,186 +51,192 @@ export default function SignUpPage() {
 
     setIsLoading(true);
 
-    // TODO: Connect to real authentication backend
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-    console.log('Sign up attempt:', { name, email, password });
+    try {
+      const { data: { user }, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name: name,
+          },
+        },
+      });
 
-    setIsLoading(false);
-    setShowSuccess(true);
+      if (error) {
+        setErrors({ email: error.message });
+        setIsLoading(false);
+        return;
+      }
+
+      // Redirect to dashboard
+      router.push('/dashboard');
+    } catch (error) {
+      setErrors({ email: 'Ocorreu um erro. Tente novamente.' });
+      setIsLoading(false);
+    }
   };
 
   return (
     <AuthLayout>
-      {showSuccess ? (
-        <div className="text-center py-8">
-          <h1 className="font-serif text-white text-3xl md:text-4xl mb-4">Sucesso!</h1>
-          <p className="text-white/80 font-sans text-lg">
-            Conta criada com sucesso. A autenticação real será conectada em breve.
+      <form onSubmit={handleSubmit} className="w-full">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <h1 className="font-serif text-white text-3xl md:text-4xl mb-3">
+            Crie sua conta
+          </h1>
+          <p className="text-white/80 font-sans text-base md:text-lg max-w-md mx-auto">
+            Junte-se à comunidade para transformar conhecimento em experiência.
           </p>
         </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="w-full">
-          {/* Header Section */}
-          <div className="text-center mb-8">
-            <h1 className="font-serif text-white text-3xl md:text-4xl mb-3">
-              Crie sua conta
-            </h1>
-            <p className="text-white/80 font-sans text-base md:text-lg max-w-md mx-auto">
-              Junte-se à comunidade para transformar conhecimento em experiência.
-            </p>
-          </div>
 
-          {/* Form Container - Optimized for Desktop */}
-          <div className="max-w-md mx-auto">
-            {/* Form Fields */}
-            <div className="space-y-4">
-              {/* Name Field */}
-              <div>
-                <label 
-                  htmlFor="name" 
-                  className="block text-white/90 font-sans text-sm mb-2"
+          {/* Form Fields */}
+          <div className="space-y-4">
+            {/* Name Field */}
+            <div>
+              <label 
+                htmlFor="name" 
+                className="block text-white/90 font-sans text-sm mb-2"
+              >
+                Nome completo
+              </label>
+              <input
+                id="name"
+                type="text"
+                autoComplete="name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
+                }}
+                className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
+                  errors.name 
+                    ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
+                    : 'focus:ring-2 focus:ring-white/60'
+                }`}
+                placeholder="Seu nome completo"
+                aria-invalid={errors.name ? 'true' : 'false'}
+                aria-describedby={errors.name ? 'name-error' : undefined}
+              />
+              {errors.name && (
+                <p 
+                  id="name-error" 
+                  className="text-[#FFB4B4] font-sans text-sm mt-2"
+                  role="alert"
                 >
-                  Nome completo
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    if (errors.name) setErrors((prev) => ({ ...prev, name: '' }));
-                  }}
-                  className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
-                    errors.name 
-                      ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
-                      : 'focus:ring-2 focus:ring-white/60'
-                  }`}
-                  placeholder="Seu nome completo"
-                  aria-invalid={errors.name ? 'true' : 'false'}
-                  aria-describedby={errors.name ? 'name-error' : undefined}
-                />
-                {errors.name && (
-                  <p 
-                    id="name-error" 
-                    className="text-[#FFB4B4] font-sans text-sm mt-2"
-                    role="alert"
-                  >
-                    {errors.name}
-                  </p>
-                )}
-              </div>
+                  {errors.name}
+                </p>
+              )}
+            </div>
 
-              {/* Email Field */}
-              <div>
-                <label 
-                  htmlFor="email" 
-                  className="block text-white/90 font-sans text-sm mb-2"
+            {/* Email Field */}
+            <div>
+              <label 
+                htmlFor="email" 
+                className="block text-white/90 font-sans text-sm mb-2"
+              >
+                E-mail
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
+                }}
+                className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
+                  errors.email 
+                    ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
+                    : 'focus:ring-2 focus:ring-white/60'
+                }`}
+                placeholder="seu@email.com"
+                aria-invalid={errors.email ? 'true' : 'false'}
+                aria-describedby={errors.email ? 'email-error' : undefined}
+              />
+              {errors.email && (
+                <p 
+                  id="email-error" 
+                  className="text-[#FFB4B4] font-sans text-sm mt-2"
+                  role="alert"
                 >
-                  E-mail
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
-                  }}
-                  className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
-                    errors.email 
-                      ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
-                      : 'focus:ring-2 focus:ring-white/60'
-                  }`}
-                  placeholder="seu@email.com"
-                  aria-invalid={errors.email ? 'true' : 'false'}
-                  aria-describedby={errors.email ? 'email-error' : undefined}
-                />
-                {errors.email && (
-                  <p 
-                    id="email-error" 
-                    className="text-[#FFB4B4] font-sans text-sm mt-2"
-                    role="alert"
-                  >
-                    {errors.email}
-                  </p>
-                )}
-              </div>
+                  {errors.email}
+                </p>
+              )}
+            </div>
 
-              {/* Password Field */}
-              <div>
-                <label 
-                  htmlFor="password" 
-                  className="block text-white/90 font-sans text-sm mb-2"
+            {/* Password Field */}
+            <div>
+              <label 
+                htmlFor="password" 
+                className="block text-white/90 font-sans text-sm mb-2"
+              >
+                Senha
+              </label>
+              <input
+                id="password"
+                type="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errors.password) setErrors((prev) => ({ ...prev, password: '' }));
+                }}
+                className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
+                  errors.password 
+                    ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
+                    : 'focus:ring-2 focus:ring-white/60'
+                }`}
+                placeholder="Mínimo 8 caracteres"
+                aria-invalid={errors.password ? 'true' : 'false'}
+                aria-describedby={errors.password ? 'password-error' : undefined}
+              />
+              {errors.password && (
+                <p 
+                  id="password-error" 
+                  className="text-[#FFB4B4] font-sans text-sm mt-2"
+                  role="alert"
                 >
-                  Senha
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (errors.password) setErrors((prev) => ({ ...prev, password: '' }));
-                  }}
-                  className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
-                    errors.password 
-                      ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
-                      : 'focus:ring-2 focus:ring-white/60'
-                  }`}
-                  placeholder="Mínimo 8 caracteres"
-                  aria-invalid={errors.password ? 'true' : 'false'}
-                  aria-describedby={errors.password ? 'password-error' : undefined}
-                />
-                {errors.password && (
-                  <p 
-                    id="password-error" 
-                    className="text-[#FFB4B4] font-sans text-sm mt-2"
-                    role="alert"
-                  >
-                    {errors.password}
-                  </p>
-                )}
-              </div>
+                  {errors.password}
+                </p>
+              )}
+            </div>
 
-              {/* Confirm Password Field */}
-              <div>
-                <label 
-                  htmlFor="confirmPassword" 
-                  className="block text-white/90 font-sans text-sm mb-2"
+            {/* Confirm Password Field */}
+            <div>
+              <label 
+                htmlFor="confirmPassword" 
+                className="block text-white/90 font-sans text-sm mb-2"
+              >
+                Confirmar senha
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }));
+                }}
+                className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
+                  errors.confirmPassword 
+                    ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
+                    : 'focus:ring-2 focus:ring-white/60'
+                }`}
+                placeholder="Digite novamente"
+                aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+                aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
+              />
+              {errors.confirmPassword && (
+                <p 
+                  id="confirmPassword-error" 
+                  className="text-[#FFB4B4] font-sans text-sm mt-2"
+                  role="alert"
                 >
-                  Confirmar senha
-                </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: '' }));
-                  }}
-                  className={`w-full h-13 rounded-full bg-white/85 text-navy-900 placeholder-gray-400/60 px-5 outline-none transition-all duration-200 ${
-                    errors.confirmPassword 
-                      ? 'focus:ring-2 focus:ring-[#FFB4B4]' 
-                      : 'focus:ring-2 focus:ring-white/60'
-                  }`}
-                  placeholder="Digite novamente"
-                  aria-invalid={errors.confirmPassword ? 'true' : 'false'}
-                  aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
-                />
-                {errors.confirmPassword && (
-                  <p 
-                    id="confirmPassword-error" 
-                    className="text-[#FFB4B4] font-sans text-sm mt-2"
-                    role="alert"
-                  >
-                    {errors.confirmPassword}
-                  </p>
-                )}
-              </div>
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
           </div>
 
@@ -251,7 +259,7 @@ export default function SignUpPage() {
           </div>
 
           {/* Login Link */}
-          <div className="mt-4 text-center">
+          <div className="mt-4 text-center lg:text-left">
             <p className="text-white/80 font-sans text-sm">
               Já tem conta?{' '}
               <Link 
@@ -270,7 +278,7 @@ export default function SignUpPage() {
             <div className="flex-1 h-px bg-white/30" />
           </div>
 
-          {/* Social Buttons - Stacked for Mobile, Inline for Desktop */}
+          {/* Social Buttons - Inline on desktop */}
           <div className="space-y-3 sm:max-w-md sm:mx-auto sm:flex sm:space-x-4 sm:space-y-0">
             {/* Google Button */}
             <button
@@ -302,7 +310,6 @@ export default function SignUpPage() {
             </button>
           </div>
         </form>
-      )}
     </AuthLayout>
   );
 }

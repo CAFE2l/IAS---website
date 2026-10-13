@@ -2,15 +2,38 @@ import { Pool } from 'pg';
 
 // Database connection for Neon PostgreSQL
 // This uses the DATABASE_URL from environment variables
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
+const connectionString = process.env.DATABASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL;
+
+// Create a mock pool for when the database is not configured (build time, etc.)
+const createPool = () => {
+  if (!connectionString) {
+    // Return a mock pool for build time or when not configured
+    return {
+      query: async (text: string, params?: any[]) => {
+        throw new Error('Database not configured');
+      },
+      end: async () => {},
+      on: () => {},
+      connect: async () => ({ 
+        query: async () => ({ rows: [], rowCount: 0 }), 
+        release: () => {} 
+      })
+    } as any;
+  }
+  
+  return new Pool({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+  });
+};
+
+// Pool for external use
+export const pool = createPool();
 
 // Query helper function
 export async function query<T = any>(
@@ -41,9 +64,6 @@ export async function queryAll<T = any>(
   const res = await pool.query<T>(text, params);
   return res.rows;
 }
-
-// Pool for external use
-export { pool };
 
 // Graceful shutdown
 process.on('exit', () => {

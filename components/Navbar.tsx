@@ -257,7 +257,7 @@ export default function Navbar() {
             >
               <Image
                 src="/favicon.png"
-                alt="IAS Logo"
+                alt="Logo do Instituto de Aprendizado Social"
                 width={40}
                 height={40}
                 className="object-cover"

@@ -41,7 +41,7 @@ export default function ClosingSection() {
             >
               <Image
                 src="/favicon.png"
-                alt="IAS Logo"
+                alt="Logo do Instituto de Aprendizado Social"
                 fill
                 sizes="64px"
                 className="object-cover scale-125"
@@ -70,7 +70,7 @@ export default function ClosingSection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="font-sans text-ivory/80 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
         >
-          O I.A.S. propõe um espaço para conectar conhecimento, experiências e pessoas 
+          O Instituto de Aprendizado Social propõe um espaço para conectar conhecimento, experiências e pessoas 
           interessadas em transformar ideias em contribuições significativas.
         </motion.p>
 

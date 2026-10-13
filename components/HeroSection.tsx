@@ -85,7 +85,7 @@ export default function HeroSection() {
             >
               <Image
                 src="/favicon.png"
-                alt="IAS Logo"
+                alt="Logo do Instituto de Aprendizado Social"
                 fill
                 sizes="64px"
                 className="object-cover"

@@ -22,6 +22,7 @@ export type Permission =
   | 'create_post'
   | 'edit_post'
   | 'delete_post'
+  | 'delete_any_post'
   | 'view_portfolio'
   | 'create_portfolio_item'
   | 'edit_portfolio_item'

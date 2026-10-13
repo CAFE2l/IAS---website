@@ -88,7 +88,7 @@ export default function AuthLayout({
             <div className="w-28 h-28 rounded-2xl bg-[#06122B]/70 flex items-center justify-center shadow-[0_0_0_2px_rgba(255,255,255,0.18)] overflow-hidden">
               <Image
                 src="/icon-3d.png"
-                alt="IAS 3D Icon"
+                alt="Ícone 3D do Instituto de Aprendizado Social"
                 width={80}
                 height={80}
                 className="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"

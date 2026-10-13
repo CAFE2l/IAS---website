@@ -56,7 +56,7 @@ export default function DashboardPage() {
       <nav className="fixed top-0 w-full z-50 bg-navy-900/95 backdrop-blur-md px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center space-x-4">
           <div className="w-10 h-10 rounded-full bg-navy-800 flex items-center justify-center overflow-hidden">
-            <img src="/favicon.png" alt="IAS Logo" className="w-7 h-7 object-contain" />
+            <img src="/favicon.png" alt="Logo do Instituto de Aprendizado Social" className="w-7 h-7 object-contain" />
           </div>
           <span className="hidden sm:block font-serif text-xl font-bold">Instituto de Aprendizado Social</span>
         </Link>

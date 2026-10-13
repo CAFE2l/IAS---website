@@ -18,7 +18,7 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata = {
-  title: 'I.A.S. - Instituto de Aprendizado Social',
+  title: 'Instituto de Aprendizado Social',
   description: 'Um ponto de encontro para transformar conhecimento em experiência, conectar pessoas e construir possibilidades por meio da colaboração.',
   keywords: 'aprendizado, colaboração, educação, inovação social, comunidade',
   icons: {

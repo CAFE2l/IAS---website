@@ -131,7 +131,7 @@ export default function AuthLayout({ children, backLink = '/', backText = '← V
                 >
                   <Image
                     src="/3D.png"
-                    alt="I.A.S. Icon"
+                    alt="Icone do Instituto de Aprendizado Social"
                     width={48}
                     height={48}
                     className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
@@ -159,7 +159,7 @@ export default function AuthLayout({ children, backLink = '/', backText = '← V
 
             {/* Brand Name/Tagline (optional) */}
             <h2 className="font-serif text-white/90 text-xl sm:text-2xl mb-2">
-              I.A.S.
+              Instituto de Aprendizado Social
             </h2>
             <p className="text-white/60 font-sans text-sm sm:text-base">
               Inteligência Artificial Seguro

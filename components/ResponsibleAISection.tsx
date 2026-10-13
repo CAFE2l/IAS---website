@@ -38,7 +38,10 @@ const principles = [
 
 export default function ResponsibleAISection() {
   return (
-    <section id="principios" className="py-24 px-4 bg-navy-800 text-ivory">
+    <section 
+      id="principios" 
+      data-theme="dark"
+      className="py-24 px-4 bg-navy-800 text-ivory">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

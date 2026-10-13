@@ -34,7 +34,10 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="hero" className="relative h-screen min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy-800 via-navy-700 to-navy-500">
+    <section 
+      id="hero" 
+      data-theme="dark"
+      className="relative h-screen min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy-800 via-navy-700 to-navy-500">
       {/* Starfield (client-only) */}
       <div className="absolute inset-0">
           {stars.map((star, i) => (

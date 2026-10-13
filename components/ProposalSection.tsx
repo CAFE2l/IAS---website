@@ -44,7 +44,10 @@ const proposalPoints = [
 
 export default function ProposalSection() {
   return (
-    <section id="proposta" className="py-24 px-4 bg-ivory">
+    <section 
+      id="proposta" 
+      data-theme="light"
+      className="py-24 px-4 bg-ivory">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

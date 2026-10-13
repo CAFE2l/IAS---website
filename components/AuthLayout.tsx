@@ -19,8 +19,8 @@ export default function AuthLayout({ children, backLink = '/', backText = '← V
     if (prefersReduced) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      const x = (e.clientX / window.innerWidth - 0.5) * 15;
+      const y = (e.clientY / window.innerHeight - 0.5) * 15;
       setMousePosition({ x, y });
     };
 
@@ -33,166 +33,152 @@ export default function AuthLayout({ children, backLink = '/', backText = '← V
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-navy-800 via-navy-700 to-navy-500" />
 
-      {/* Blurred Blobs */}
+      {/* Frosted Glass Geometric Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"
-          style={{ 
-            animation: prefersReduced ? 'none' : 'float-shape 8s ease-in-out infinite',
-            animationDelay: '0s'
-          }}
-        />
-        <div 
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-navy-400/25 rounded-full blur-[120px]"
-          style={{ 
-            animation: prefersReduced ? 'none' : 'float-shape 10s ease-in-out infinite',
-            animationDelay: '2s'
-          }}
-        />
-        <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-300/15 rounded-full blur-[80px]"
-          style={{ 
-            animation: prefersReduced ? 'none' : 'float-shape 9s ease-in-out infinite',
-            animationDelay: '4s'
-          }}
-        />
-      </div>
-
-      {/* CSS 3D Shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Glossy Sphere - Top Left */}
+        {/* Left Frosted Glass Plane */}
         <motion.div
-          className="absolute top-[8%] left-[10%] w-24 h-24 rounded-full"
+          className="absolute top-1/3 left-[-10%] w-96 h-80 bg-white/5 backdrop-blur-2xl rounded-3xl"
           style={{
-            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(59,111,212,0.3) 50%, rgba(8,43,104,0.4) 100%)',
-            boxShadow: '0 8px 32px rgba(8,43,104,0.3), inset 0 -4px 12px rgba(0,0,0,0.2), inset 0 4px 12px rgba(255,255,255,0.1)',
+            boxShadow: '0 8px 32px rgba(2, 10, 40, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
           }}
           animate={prefersReduced ? {} : {
-            y: [0, -20, 0],
-            rotate: [0, 5, 0],
+            opacity: [0.3, 0.5, 0.3],
           }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Rounded Cube (Tilted Square) - Top Right */}
+        {/* Right Frosted Glass Plane */}
         <motion.div
-          className="absolute top-[12%] right-[8%] w-20 h-20"
+          className="absolute top-2/3 right-[-10%] w-80 h-64 bg-white/5 backdrop-blur-2xl rounded-3xl"
           style={{
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(59,111,212,0.2) 50%, rgba(8,43,104,0.35) 100%)',
-            borderRadius: '16px',
-            boxShadow: '0 12px 40px rgba(8,43,104,0.35), inset 0 -6px 16px rgba(0,0,0,0.25), inset 0 6px 16px rgba(255,255,255,0.12)',
+            boxShadow: '0 8px 32px rgba(2, 10, 40, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
           }}
           animate={prefersReduced ? {} : {
-            y: [0, -25, 0],
-            rotate: [0, -8, 0],
+            opacity: [0.4, 0.6, 0.4],
           }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 1,
-          }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
         />
 
-        {/* Torus/Ring - Bottom Left */}
+        {/* Soft Blurred Sphere - Top Center */}
         <motion.div
-          className="absolute bottom-[15%] left-[12%] w-28 h-28"
+          className="absolute top-16 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full"
           style={{
-            borderRadius: '50%',
-            border: '12px solid',
-            borderColor: 'transparent',
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(59,111,212,0.15) 50%, rgba(8,43,104,0.3) 100%)',
-            boxShadow: '0 10px 36px rgba(8,43,104,0.3), inset 0 -4px 14px rgba(0,0,0,0.2), inset 0 4px 14px rgba(255,255,255,0.08)',
-            mask: 'radial-gradient(transparent 45%, black 46%)',
-            WebkitMask: 'radial-gradient(transparent 45%, black 46%)',
+            background: 'radial-gradient(circle at 30% 30%, rgba(147, 176, 255, 0.15) 0%, rgba(8, 43, 104, 0.1) 40%, transparent 70%)',
+            backdropFilter: 'blur(60px)',
+            WebkitBackdropFilter: 'blur(60px)',
+            boxShadow: '0 0 80px rgba(2, 10, 40, 0.15), inset 0 0 30px rgba(255, 255, 255, 0.05)',
           }}
           animate={prefersReduced ? {} : {
-            y: [0, -18, 0],
-            rotate: [0, 6, 0],
+            y: [0, -8, 0],
+            scale: [1, 1.05, 1],
           }}
-          transition={{
-            duration: 9,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 2,
-          }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* Small Sphere - Bottom Right */}
+        {/* Soft Blurred Sphere - Bottom Left */}
         <motion.div
-          className="absolute bottom-[20%] right-[15%] w-16 h-16 rounded-full"
+          className="absolute bottom-32 left-1/4 -translate-x-1/4 w-72 h-72 rounded-full"
           style={{
-            background: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.35) 0%, rgba(59,111,212,0.25) 50%, rgba(8,43,104,0.35) 100%)',
-            boxShadow: '0 6px 24px rgba(8,43,104,0.25), inset 0 -3px 10px rgba(0,0,0,0.2), inset 0 3px 10px rgba(255,255,255,0.1)',
+            background: 'radial-gradient(circle at 40% 40%, rgba(79, 163, 255, 0.12) 0%, rgba(8, 43, 104, 0.12) 50%, transparent 70%)',
+            backdropFilter: 'blur(50px)',
+            WebkitBackdropFilter: 'blur(50px)',
+            boxShadow: '0 0 60px rgba(2, 10, 40, 0.1), inset 0 0 25px rgba(255, 255, 255, 0.03)',
           }}
           animate={prefersReduced ? {} : {
-            y: [0, -15, 0],
-            rotate: [0, -4, 0],
+            y: [0, 6, 0],
+            scale: [1, 0.95, 1],
           }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 3,
-          }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
 
       {/* Back Link */}
       <Link
         href={backLink}
-        className="absolute top-6 left-6 text-white hover:text-white/80 transition-colors duration-200 font-sans text-sm z-20"
+        className="absolute top-6 left-6 text-white/80 hover:text-white transition-colors duration-200 font-sans text-sm z-10"
       >
         {backText}
       </Link>
 
       {/* Glass Card */}
       <motion.div
-        className="auth-glass-card relative w-full max-w-[960px] mx-auto px-6 sm:px-8 md:px-12 py-10 md:py-12"
+        className="auth-glass-card relative w-full max-w-md mx-auto px-6 sm:px-8 md:px-12 py-10 md:py-12"
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
         style={{
-          transform: prefersReduced ? 'none' : `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px)`,
+          transform: prefersReduced ? 'none' : `translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px)`,
         }}
       >
-        {/* 3D Icon on Top Edge */}
+        {/* Premium Logo Badge - Centered at Top */}
         <motion.div
-          className="absolute -top-10 left-1/2 -translate-x-1/2 z-10"
+          className="absolute top-0 left-1/2 -translate-x-1/2 z-20"
           animate={prefersReduced ? {} : {
-            y: [0, -14, 0],
+            y: [0, -6, 0],
+            scale: [1, 1.02, 1],
           }}
           transition={{
-            duration: 4,
+            duration: 12,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
         >
-          <div className="relative">
-            <Image
-              src="/icon-3d.png"
-              alt="I.A.S. Icon"
-              width={96}
-              height={96}
-              className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
-              priority
-            />
-            <div 
-              className="absolute inset-0 rounded-full"
+          {/* Frosted Glass Circular Badge */}
+          <div
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 40, 120, 0.25)',
+            }}
+          >
+            {/* Subtle Inner Glow */}
+            <div
+              className="absolute inset-0 rounded-full pointer-events-none"
               style={{
-                background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 60%)',
-                pointerEvents: 'none',
+                background: 'radial-gradient(circle at 30% 30%, rgba(147, 176, 255, 0.25) 0%, transparent 60%)',
+              }}
+            />
+
+            {/* Logo with Inner Glow */}
+            <div
+              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center overflow-hidden"
+              style={{
+                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 60%)',
+              }}
+            >
+              <Image
+                src="/3D.png"
+                alt="I.A.S. Icon"
+                width={48}
+                height={48}
+                className="w-12 h-12 sm:w-14 sm:h-14 object-contain"
+                priority
+              />
+            </div>
+
+            {/* Top-Left Light Highlight */}
+            <div
+              className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%)',
+              }}
+            />
+
+            {/* Bottom-Right Depth Shadow */}
+            <div
+              className="absolute bottom-0 right-0 w-1/2 h-1/2 rounded-full pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle at 30% 30%, rgba(0, 40, 120, 0.3) 0%, transparent 60%)',
               }}
             />
           </div>
         </motion.div>
 
         {/* Content */}
-        <div className="mt-8 md:mt-6">
+        <div className="pt-8 md:pt-6 pb-10 md:pb-12">
           {children}
         </div>
       </motion.div>

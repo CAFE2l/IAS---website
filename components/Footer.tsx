@@ -2,6 +2,7 @@
 
 import { useRef, type ReactNode } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   motion,
   useMotionValue,
@@ -30,6 +31,7 @@ export default function Footer() {
   return (
     <footer
       id="rodape"
+      data-theme="dark"
       className="relative isolate overflow-hidden bg-gradient-to-b from-[#041B3F] to-[#06122B] px-4 pb-28 pt-20 sm:px-6 sm:pb-24 lg:px-8"
     >
       {/* LED line on the top edge */}
@@ -125,9 +127,20 @@ export default function Footer() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-10 border-t border-white/10 pt-6"
         >
-          <p className="font-sans text-sm text-white/60">
-            © 2026 Instituto de Aprendizado Social. Todos os direitos reservados.
-          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Image
+                src="/favicon.png"
+                alt="IAS Logo"
+                width={24}
+                height={24}
+                className="object-contain"
+              />
+              <p className="font-sans text-sm text-white/60">
+                © 2026 Instituto de Aprendizado Social. Todos os direitos reservados.
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </footer>

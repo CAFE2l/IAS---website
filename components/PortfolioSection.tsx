@@ -114,7 +114,10 @@ function ProjectCard({ title, description, category, imageSrc, delay }: ProjectC
 
 export default function PortfolioSection() {
   return (
-    <section id="portfolio" className="py-24 px-4 bg-ivory">
+    <section 
+      id="portfolio" 
+      data-theme="light"
+      className="py-24 px-4 bg-ivory">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

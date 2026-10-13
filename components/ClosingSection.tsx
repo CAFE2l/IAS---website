@@ -6,7 +6,10 @@ import Image from 'next/image';
 
 export default function ClosingSection() {
   return (
-    <section id="final" className="relative py-24 px-4 bg-navy-900 text-ivory overflow-hidden">
+    <section 
+      id="final" 
+      data-theme="dark"
+      className="relative py-24 px-4 bg-navy-900 text-ivory overflow-hidden">
       {/* Background with subtle animation */}
       <div className="absolute inset-0">
         <motion.div
@@ -37,7 +40,7 @@ export default function ClosingSection() {
               className="relative w-16 h-16 rounded-full border-2 border-ivory/30 overflow-hidden"
             >
               <Image
-                src="/favicon2.png"
+                src="/favicon.png"
                 alt="IAS Logo"
                 fill
                 sizes="64px"

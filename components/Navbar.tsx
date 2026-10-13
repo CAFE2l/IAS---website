@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Navigation items
 const navItems = [
   { name: 'A proposta', href: '#proposta' },
   { name: 'Como funciona', href: '#como-funciona' },
@@ -17,55 +18,235 @@ const authItems = [
   { name: 'Experimentar', href: '/cadastro', primary: true },
 ];
 
-export default function Navbar() {
-  const [isDarkSection, setIsDarkSection] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+// Dark sections - sections with dark backgrounds that need light header theme
+const DARK_SECTIONS = new Set(['hero', 'principios', 'final', 'rodape']);
 
-  useEffect(() => {
-    // Track section visibility to determine navbar text color
-    const sections = document.querySelectorAll('section[id]');
+// Header theme type
+type HeaderTheme = 'dark' | 'light';
+
+// CSS transition duration in ms (250-400ms range as per requirements)
+const TRANSITION_DURATION = 350;
+
+// Helper: Get section position from top of document
+function getSectionTopOffset(sectionId: string): number | null {
+  const section = document.querySelector(`section[id="${sectionId}"]`);
+  if (section) {
+    return section.getBoundingClientRect().top + window.scrollY;
+  }
+  return null;
+}
+
+export default function Navbar() {
+  // Theme state: 'dark' means we're over a dark section (use light header), 'light' means light section (use dark header)
+  const [headerTheme, setHeaderTheme] = useState<HeaderTheme>('light');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Reference for the observer
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const sectionsRef = useRef<HTMLElement[]>([]);
+
+  // Determine theme for a section based on its ID and background
+  const getSectionTheme = useCallback((sectionId: string): HeaderTheme => {
+    return DARK_SECTIONS.has(sectionId) ? 'dark' : 'light';
+  }, []);
+
+  // Determine theme based on current scroll position and section positions
+  const getThemeFromScrollPosition = useCallback(() => {
+    const scrollTop = window.scrollY;
+    const headerHeight = 80; // Approximate header height
     
+    // Find which section we're currently in
+    const sectionsWithPositions = sectionsRef.current.map(section => ({
+      id: section.id,
+      top: section.getBoundingClientRect().top + scrollTop,
+      bottom: section.getBoundingClientRect().bottom + scrollTop,
+    }));
+    
+    // Find the section that contains the header position (middle of viewport)
+    const viewportMiddle = scrollTop + window.innerHeight / 2;
+    
+    for (const section of sectionsWithPositions) {
+      // Check if viewport middle is within this section
+      if (viewportMiddle >= section.top && viewportMiddle <= section.bottom) {
+        return getSectionTheme(section.id);
+      }
+    }
+    
+    // Default to light theme if we can't determine
+    return 'light';
+  }, [getSectionTheme]);
+
+  // Initialize observer
+  useEffect(() => {
+    // Mark body for header styling
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('header-ready');
+    }
+
+    // Find all sections with IDs
+    const sections = document.querySelectorAll<HTMLElement>('section[id]');
+    sectionsRef.current = Array.from(sections);
+
+    // Determine initial theme based on scroll position (handles mid-page refresh)
+    const initialTheme = getThemeFromScrollPosition();
+    setHeaderTheme(initialTheme);
+    
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('header-on-dark', 'header-on-light');
+      if (initialTheme === 'dark') {
+        document.body.classList.add('header-on-dark');
+      } else {
+        document.body.classList.add('header-on-light');
+      }
+    }
+
+    // Create observer with proper configuration
     observerRef.current = new IntersectionObserver(
       (entries) => {
+        // Find the section with the highest intersection ratio
+        let mostVisibleSection: HTMLElement | null = null;
+        let highestRatio = 0;
+
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const section = entry.target as HTMLElement;
-            // Check if section has dark background
-            const isDark = section.classList.contains('bg-navy-800') || 
-                          section.classList.contains('bg-navy-900') ||
-                          section.classList.contains('from-navy-800') ||
-                          section.classList.contains('to-navy-500') ||
-                          section.classList.contains('from-[#041B3F]') ||
-                          section.classList.contains('to-[#06122B]');
-            
-            // If the section taking up most of the viewport is dark, use white text
-            if (entry.intersectionRatio > 0.3) {
-              setIsDarkSection(isDark);
-            }
+          if (entry.isIntersecting && entry.intersectionRatio > highestRatio) {
+            highestRatio = entry.intersectionRatio;
+            mostVisibleSection = entry.target as HTMLElement;
           }
         });
+
+        // For very fast scrolling, also check sections near the viewport
+        if (!mostVisibleSection && entries.length > 0) {
+          const sortedByPosition = [...entries].sort((a, b) => 
+            (a.boundingClientRect.top || 0) - (b.boundingClientRect.top || 0)
+          );
+          const topmostIntersecting = sortedByPosition.find(e => 
+            e.isIntersecting && (e.boundingClientRect.top || 0) < 200
+          );
+          
+          if (topmostIntersecting) {
+            mostVisibleSection = topmostIntersecting.target as HTMLElement;
+          }
+        }
+
+        if (mostVisibleSection) {
+          const sectionId = mostVisibleSection.id;
+          const theme = getSectionTheme(sectionId);
+          
+          // Update theme state
+          setHeaderTheme(theme);
+          
+          // Update body class for CSS-based theming
+          if (typeof document !== 'undefined') {
+            document.body.classList.remove('header-on-dark', 'header-on-light');
+            if (theme === 'dark') {
+              document.body.classList.add('header-on-dark');
+            } else {
+              document.body.classList.add('header-on-light');
+            }
+          }
+        }
       },
       {
-        threshold: [0.1, 0.3, 0.5],
-        rootMargin: '-80px 0px -50% 0px', // Top of viewport detection
+        threshold: [0, 0.1, 0.3, 0.5, 0.7, 1],
+        rootMargin: '-100px 0px 0px 0px', // Detect sections 100px before they enter viewport
       }
     );
 
+    // Observe all sections
     sections.forEach((section) => {
       observerRef.current?.observe(section);
     });
 
+    // Handle hash changes (anchor links, browser back/forward)
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const section = document.querySelector(`section[id="${hash}"]`);
+        if (section) {
+          const theme = getSectionTheme(hash);
+          setHeaderTheme(theme);
+          document.body.classList.remove('header-on-dark', 'header-on-light');
+          if (theme === 'dark') {
+            document.body.classList.add('header-on-dark');
+          } else {
+            document.body.classList.add('header-on-light');
+          }
+        }
+      }
+    };
+
+    // Also handle scroll events for fast scrolling edge cases
+    const handleScroll = () => {
+      // Debounce scroll to avoid excessive updates
+      const theme = getThemeFromScrollPosition();
+      if (theme !== headerTheme) {
+        setHeaderTheme(theme);
+        document.body.classList.remove('header-on-dark', 'header-on-light');
+        if (theme === 'dark') {
+          document.body.classList.add('header-on-dark');
+        } else {
+          document.body.classList.add('header-on-light');
+        }
+      }
+    };
+
+    // Throttled scroll handler
+    let scrollThrottle: number | undefined;
+    const throttledHandleScroll = () => {
+      if (scrollThrottle) clearTimeout(scrollThrottle);
+      scrollThrottle = window.setTimeout(handleScroll, 50);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('scroll', throttledHandleScroll);
+
     return () => {
       observerRef.current?.disconnect();
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('scroll', throttledHandleScroll);
+      if (scrollThrottle) clearTimeout(scrollThrottle);
+      
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('header-ready', 'header-on-dark', 'header-on-light');
+      }
     };
-  }, []);
+  }, [getSectionTheme, getThemeFromScrollPosition, headerTheme]);
 
-  const textColor = isDarkSection ? '#FFFBF3' : '#082B68';
-  const navbarBg = 'bg-navy-900/95 backdrop-blur-md shadow-md';
+  // Handle resize for edge cases (orientation changes on mobile)
+  useEffect(() => {
+    const handleResize = () => {
+      const theme = getThemeFromScrollPosition();
+      setHeaderTheme(theme);
+      document.body.classList.remove('header-on-dark', 'header-on-light');
+      if (theme === 'dark') {
+        document.body.classList.add('header-on-dark');
+      } else {
+        document.body.classList.add('header-on-light');
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [getThemeFromScrollPosition]);
+
+  // Theme-specific styles
+  const isDarkTheme = headerTheme === 'dark';
+
+  // Transition style for smooth animations
+  const transitionStyle = {
+    transition: `all ${TRANSITION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+  };
+
+  // Logo filter based on theme
+  const logoFilter = isDarkTheme ? 'invert(1) brightness(1.2)' : 'none';
 
   return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${navbarBg}`}>
+    <header
+      className={`fixed top-0 w-full z-50 header ${
+        isDarkTheme ? 'header--dark' : 'header--light'
+      }`}
+      style={transitionStyle}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
@@ -73,8 +254,9 @@ export default function Navbar() {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="w-10 h-10 rounded-full bg-navy-800 flex items-center justify-center overflow-hidden"
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden"
+              style={transitionStyle}
             >
               <Image
                 src="/favicon.png"
@@ -82,9 +264,14 @@ export default function Navbar() {
                 width={40}
                 height={40}
                 className="object-cover"
+                style={{ filter: logoFilter, transition: `filter ${TRANSITION_DURATION}ms ease-out` }}
+                priority
               />
             </motion.div>
-            <span className="hidden sm:block font-serif text-xl font-bold transition-colors duration-300" style={{ color: textColor }}>
+            <span 
+              className="hidden sm:block font-serif text-xl font-bold header-text"
+              style={transitionStyle}
+            >
               Instituto de Aprendizado Social
             </span>
           </Link>
@@ -95,34 +282,40 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="font-sans transition-colors duration-300 hover:opacity-80"
-                style={{ color: textColor }}
+                className={`font-sans header-link hover:opacity-80`}
+                style={transitionStyle}
               >
                 {item.name}
               </Link>
             ))}
-            {/* Entrar link */}
-            <Link
-              href="/login"
-              className="font-sans text-sm transition-colors duration-200 hover:opacity-80"
-              style={{ color: textColor }}
-            >
-              Entrar
-            </Link>
+            {/* Entrar & Experimentar links */}
+            {authItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`font-sans text-sm header-link hover:opacity-80 ${
+                  item.primary ? 'font-semibold' : ''
+                }`}
+                style={transitionStyle}
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors duration-200"
+            className={`md:hidden p-2 rounded-lg`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+            style={transitionStyle}
           >
             <svg
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              style={{ stroke: textColor }}
             >
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -134,34 +327,42 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: isMenuOpen ? 'auto' : 0 }}
-        transition={{ duration: 0.3 }}
-        className="md:hidden overflow-hidden bg-navy-900/95 backdrop-blur-md"
-      >
-        <nav className="px-4 py-4 space-y-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="block text-white hover:text-white/80 font-sans transition-colors duration-200 py-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <Link
-            key="entrar"
-            href="/login"
-            className="block text-white hover:text-white/80 font-sans transition-colors duration-200 py-2"
-            onClick={() => setIsMenuOpen(false)}
+      {/* Mobile Menu - AnimatePresence for smooth enter/exit */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -10 }}
+            animate={{ opacity: 1, height: 'auto', y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className={`md:hidden overflow-hidden rounded-b-2xl ${
+              isDarkTheme ? 'header--dark' : 'header--light'
+            }`}
           >
-            Entrar
-          </Link>
-        </nav>
-      </motion.div>
+            <nav className="px-4 py-4 space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`block header-text header-link transition-colors duration-200 py-2`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="border-t border-white/10 mt-2 pt-2">
+                <Link
+                  href="/login"
+                  className={`block header-text header-link transition-colors duration-200 py-2`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Entrar
+                </Link>
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

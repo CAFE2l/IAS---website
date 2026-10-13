@@ -36,6 +36,7 @@ export default function LearningJourney() {
   return (
     <section 
       id="como-funciona" 
+      data-theme="light"
       className="py-24 px-4 bg-ivory relative overflow-hidden"
       style={{ scrollMarginTop: '100px' }}
     >

@@ -58,6 +58,15 @@ module.exports = {
       spacing: {
         '13': '3.25rem',
       },
+      transitionDuration: {
+        250: '250ms',
+        300: '300ms',
+        350: '350ms',
+        400: '400ms',
+      },
+      transitionTimingFunction: {
+        'premium': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
       boxShadow: {
         'glass': '0 8px 32px rgba(8, 43, 104, 0.1), 0 4px 16px rgba(8, 43, 104, 0.05)',
         'card': '0 4px 20px rgba(8, 43, 104, 0.08)',

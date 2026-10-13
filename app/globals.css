@@ -136,21 +136,20 @@
 
   /* Frosted-glass card used by both auth pages */
   .auth-glass-card {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 32px;
     box-shadow:
-      0 30px 80px rgba(2, 10, 40, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.32),
-      inset 0 4px 14px rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
+      0 20px 60px rgba(2, 10, 40, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px) saturate(130%);
+    -webkit-backdrop-filter: blur(20px) saturate(130%);
   }
 
   @supports not (backdrop-filter: blur(24px)) {
     .auth-glass-card {
-      background: rgba(8, 43, 104, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(8, 43, 104, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
   }
 }
@@ -237,4 +236,84 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===== Header Theme System ===== */
+
+/* Base header styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: background-color, color, border-color, box-shadow;
+}
+
+/* Theme Dark - for dark sections (hero, principles, closing, footer) */
+/* When over a dark section, header uses a subtle dark/transparent background with light text */
+.header--dark {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 24px rgba(8, 43, 104, 0.15);
+}
+
+.header--dark .header-text,
+.header--dark .header-link,
+.header--dark .header-icon {
+  color: #FFFBF3;
+}
+
+.header--dark .header-logo {
+  filter: invert(1) brightness(1.2);
+}
+
+/* Theme Light - for light sections (proposal, journey, ecosystem, portfolio, roadmap) */
+/* When over a light section, header uses a frosted white background with navy text */
+.header--light {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(8, 43, 104, 0.15);
+  box-shadow: 0 4px 24px rgba(8, 43, 104, 0.12), 0 2px 8px rgba(8, 43, 104, 0.08);
+}
+
+.header--light .header-text,
+.header--light .header-link,
+.header--light .header-icon {
+  color: #082B68;
+}
+
+.header--light .header-logo {
+  filter: none;
+}
+
+/* Smooth transition classes */
+.header-transition {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass effect utilities for header */
+.header-glass {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(8, 43, 104, 0.1), 0 4px 16px rgba(8, 43, 104, 0.05);
+}
+
+.header-glass-dark {
+  background: rgba(8, 43, 104, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(8, 43, 104, 0.15), 0 4px 16px rgba(8, 43, 104, 0.1);
+}
+
+/* Logo color variants */
+.header-logo-white {
+  filter: invert(1) brightness(1.2);
 }

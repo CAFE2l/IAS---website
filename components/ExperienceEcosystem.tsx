@@ -85,7 +85,10 @@ export default function ExperienceEcosystem() {
   ];
 
   return (
-    <section id="experiencias" className="py-24 px-4 bg-ivory/50">
+    <section 
+      id="experiencias" 
+      data-theme="light"
+      className="py-24 px-4 bg-ivory/50">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div

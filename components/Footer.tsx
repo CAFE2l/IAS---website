@@ -127,20 +127,9 @@ export default function Footer() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-10 border-t border-white/10 pt-6"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Image
-                src="/favicon.png"
-                alt="IAS Logo"
-                width={24}
-                height={24}
-                className="object-contain"
-              />
-              <p className="font-sans text-sm text-white/60">
-                © 2026 Instituto de Aprendizado Social. Todos os direitos reservados.
-              </p>
-            </div>
-          </div>
+          <p className="font-sans text-sm text-white/60">
+            © 2026 Instituto de Aprendizado Social. Todos os direitos reservados.
+          </p>
         </motion.div>
       </div>
     </footer>

@@ -237,9 +237,6 @@ export default function Navbar() {
     transition: `all ${TRANSITION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`,
   };
 
-  // Logo filter based on theme
-  const logoFilter = isDarkTheme ? 'invert(1) brightness(1.2)' : 'none';
-
   return (
     <header
       className={`fixed top-0 w-full z-50 header ${
@@ -264,13 +261,15 @@ export default function Navbar() {
                 width={40}
                 height={40}
                 className="object-cover"
-                style={{ filter: logoFilter, transition: `filter ${TRANSITION_DURATION}ms ease-out` }}
                 priority
               />
             </motion.div>
             <span 
               className="hidden sm:block font-serif text-xl font-bold header-text"
-              style={transitionStyle}
+              style={{
+                ...transitionStyle,
+                color: isDarkTheme ? '#FFFBF3' : '#082B68',
+              }}
             >
               Instituto de Aprendizado Social
             </span>
@@ -283,7 +282,10 @@ export default function Navbar() {
                 key={item.name}
                 href={item.href}
                 className={`font-sans header-link hover:opacity-80`}
-                style={transitionStyle}
+                style={{
+                  ...transitionStyle,
+                  color: isDarkTheme ? '#FFFBF3' : '#082B68',
+                }}
               >
                 {item.name}
               </Link>
@@ -296,7 +298,10 @@ export default function Navbar() {
                 className={`font-sans text-sm header-link hover:opacity-80 ${
                   item.primary ? 'font-semibold' : ''
                 }`}
-                style={transitionStyle}
+                style={{
+                  ...transitionStyle,
+                  color: isDarkTheme ? '#FFFBF3' : '#082B68',
+                }}
               >
                 {item.name}
               </Link>
@@ -315,8 +320,9 @@ export default function Navbar() {
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+      viewBox="0 0 24 24"
+      style={{ color: isDarkTheme ? '#FFFBF3' : '#082B68' }}
+    >
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (

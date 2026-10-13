@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 export default function ClosingSection() {
   return (
@@ -35,44 +34,26 @@ export default function ClosingSection() {
       </div>
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
-        {/* Logo/Brand in Navy */}
+        {/* Logo/Brand in Navy - TEXT ONLY, no icon */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex justify-center mb-12"
+          className="mb-12"
         >
-          <div className="flex items-center space-x-4">
-            <motion.div
-              initial={{ scale: 0 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.3, type: 'spring' }}
-              className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center border-2 border-ivory/30 overflow-hidden"
-            >
-              <Image
-                src="/images/favicon.png"
-                alt="IAS Logo"
-                width={48}
-                height={48}
-                className="object-contain"
-              />
-            </motion.div>
-            <div className="hidden md:block text-left">
-              <span className="font-serif text-ivory text-sm tracking-wider">Instituto de</span>
-              <span className="font-serif text-ivory text-2xl font-bold leading-none">Aprendizado Social</span>
-            </div>
-          </div>
+          <span className="font-serif text-ivory text-sm tracking-wider">Instituto de</span>
+          <span className="font-serif text-ivory text-2xl font-bold leading-none ml-1">Aprendizado Social</span>
         </motion.div>
 
-        {/* Closing Headline */}
+        {/* Closing Headline - WHITE text */}
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-tight"
+          className="font-serif text-ivory text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-tight"
         >
           <span className="block mb-2">O próximo passo do aprendizado</span>
-          <span className="text-navy-400">pode ser construído em conjunto.</span>
+          <span className="text-navy-300">pode ser construído em conjunto.</span>
         </motion.h2>
 
         {/* Supporting Text */}
@@ -80,7 +61,7 @@ export default function ClosingSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="font-sans text-navy-300 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
+          className="font-sans text-ivory/80 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
         >
           O I.A.S. propõe um espaço para conectar conhecimento, experiências e pessoas 
           interessadas em transformar ideias em contribuições significativas.
@@ -106,9 +87,9 @@ export default function ClosingSection() {
             href="#hero"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center justify-center px-8 py-4 bg-ivory/20 hover:bg-ivory/30 text-navy-900 font-sans font-semibold rounded-full transition-colors duration-200 border border-ivory/30"
+            className="inline-flex items-center justify-center px-8 py-4 bg-ivory/20 hover:bg-ivory/30 text-ivory font-sans font-semibold rounded-full transition-colors duration-200 border border-ivory/30"
           >
-            Voltar ao início
+            Explorar a experiência
           </motion.a>
         </motion.div>
       </div>

@@ -37,14 +37,14 @@ export default function Navbar() {
               className="w-10 h-10 rounded-full bg-navy-800 flex items-center justify-center overflow-hidden"
             >
               <Image
-                src="/images/favicon.png"
+                src="/favicon.png"
                 alt="IAS Logo"
                 width={40}
                 height={40}
                 className="object-contain"
               />
             </motion.div>
-            <span className={`hidden sm:block font-serif text-xl font-bold transition-colors duration-300 ${scrolled ? 'text-navy-900' : 'text-ivory'}`}>
+            <span className="hidden sm:block font-serif text-xl font-bold transition-colors duration-300" style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}>
               Instituto de Aprendizado Social
             </span>
           </Link>
@@ -55,7 +55,8 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`font-sans transition-colors duration-300 ${scrolled ? 'text-navy-900 hover:text-navy-600' : 'text-ivory hover:text-navy-200'}`}
+                className={`font-sans transition-colors duration-300`}
+                style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}
               >
                 {item.name}
               </Link>
@@ -69,17 +70,18 @@ export default function Navbar() {
             aria-label="Toggle menu"
           >
             <svg
-      className={`w-6 h-6 transition-colors duration-300 ${scrolled ? 'text-navy-900' : 'text-ivory'}`}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      {isMenuOpen ? (
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-      ) : (
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-      )}
-    </svg>
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style={{ stroke: scrolled ? '#082B68' : '#FFFBF3' }}
+            >
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
           </button>
         </div>
       </div>

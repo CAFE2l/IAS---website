@@ -7,25 +7,25 @@ const roadmapSteps = [
   {
     id: 1,
     title: 'Planejar',
-    description: 'Entender a comunidade, definir objetivos, responsabilidades e recursos disponíveis.',
+    description: 'Entender a comunidade e definir objetivos, responsabilidades e recursos disponíveis.',
     icon: Calendar,
   },
   {
     id: 2,
     title: 'Experimentar',
-    description: 'Realizar um pequeno workshop ou atividade colaborativa para testar a proposta.',
+    description: 'Realizar pequenos workshops ou atividades colaborativas para testar a proposta.',
     icon: TestTube,
   },
   {
     id: 3,
     title: 'Conectar',
-    description: 'Organizar a experiência, compartilhar aprendizados e reunir feedback.',
+    description: 'Organizar experiências, compartilhar aprendizados e reunir feedback da comunidade.',
     icon: Users,
   },
   {
     id: 4,
     title: 'Evoluir',
-    description: 'Melhorar a proposta com base em experiências, ajustes e novas habilidades.',
+    description: 'Melhorar a proposta baseado em experiências reais e novas habilidades.',
     icon: ArrowUpRight,
   },
 ];
@@ -68,23 +68,45 @@ export default function RoadmapSection() {
           </motion.p>
         </motion.div>
 
-        {/* Timeline */}
+        {/* Timeline with Horizontal Line */}
         <div className="relative">
-          {/* Vertical Line */}
-          <motion.div
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="absolute left-1/2 top-20 bottom-20 w-1 bg-navy-300/30 transform -translate-x-1/2 z-0"
-          />
+          {/* Horizontal Connector Line - centered vertically through cards */}
+          <div className="hidden lg:block absolute top-1/2 left-16 right-16 h-1 bg-navy-300/50 transform -translate-y-1/2 z-0" />
 
-          {/* Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+          {/* Mobile: Vertical Line on left side */}
+          <div className="hidden lg:block">
+            {/* Step markers on the line */}
             {roadmapSteps.map((step, index) => {
               const Icon = step.icon;
-              const isOdd = index % 2 === 0;
+              const leftPercent = 16 + (index * 25) + 12.5; // Center of each card
               
+              return (
+                <motion.div
+                  key={step.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                  className="absolute_top-1/2 -translate-y-1/2 z-10"
+                  style={{ left: `${leftPercent}%` }}
+                >
+                  <div className="w-10 h-10 bg-navy-800 text-ivory rounded-full border-2 border-ivory/30 flex items-center justify-center">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Mobile vertical line */}
+          <div className="lg:hidden absolute left-1/2 -translate-x-1/2 top-20 bottom-20 w-1 bg-navy-300/30 z-0" />
+
+          {/* Steps Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 relative z-10">
+            {roadmapSteps.map((step, index) => {
+              const Icon = step.icon;
+              const isMobile = index % 2 === 0;
+
               return (
                 <motion.div
                   key={step.id}
@@ -92,62 +114,39 @@ export default function RoadmapSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  className="flex items-center md:h-auto"
+                  className="bg-ivory rounded-2xl p-6 shadow-lg border border-navy-100/50"
                 >
-                  {/* Step Content */}
-                  <div className={`w-full ${isOdd ? 'md:pr-20 md:pl-0' : 'md:pl-20 md:pr-0'}`}>
-                    <div className="bg-ivory rounded-2xl p-6 shadow-lg border border-navy-100/50">
-                      <div className="flex items-start space-x-4">
-                        {/* Step Number */}
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          whileInView={{ scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
-                          className="w-10 h-10 bg-navy-800 text-ivory rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0"
-                        >
-                          {step.id}
-                        </motion.div>
-
-                        {/* Content */}
-                        <div>
-                          <h3 className="font-serif text-navy-900 text-xl mb-2 flex items-center">
-                            {step.title}
-                            <motion.div
-                              initial={{ opacity: 0, x: -10 }}
-                              whileInView={{ opacity: 1, x: 0 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-                              className="ml-2 p-1 bg-navy-100 rounded-full"
-                            >
-                              <Icon className="w-4 h-4 text-navy-700" />
-                            </motion.div>
-                          </h3>
-                          <p className="font-sans text-navy-600 text-sm leading-relaxed">
-                            {step.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Step Circle - Position on timeline */}
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
-                        className="absolute -top-5 w-10 h-10 bg-ivory border-2 border-navy-800 rounded-full flex items-center justify-center"
-                      >
-                        <div className="w-4 h-4 bg-navy-800 rounded-full" />
-                      </motion.div>
-                    </div>
+                  {/* Number Badge + Title + Icon Row */}
+                  <div className="flex items-center space-x-3 mb-3">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
+                      className="w-10 h-10 bg-navy-800 text-ivory rounded-full flex items-center justify-center font-bold text-base"
+                    >
+                      {step.id}
+                    </motion.div>
+                    <h3 className="font-serif text-navy-900 text-lg flex-1">{step.title}</h3>
                   </div>
+
+                  {/* Description */}
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                    className="font-sans text-navy-600 text-sm leading-relaxed"
+                  >
+                    {step.description}
+                  </motion.p>
                 </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* Accessibility Note */}
+        {/* Accessibility Note - High Contrast */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -155,8 +154,8 @@ export default function RoadmapSection() {
           transition={{ duration: 0.6, delay: 1 }}
           className="mt-16 text-center"
         >
-          <div className="bg-navy-800/30 rounded-2xl p-6 max-w-2xl mx-auto">
-            <p className="font-sans text-navy-300 text-sm leading-relaxed">
+          <div className="bg-navy-800 rounded-2xl p-6 max-w-2xl mx-auto">
+            <p className="font-sans text-ivory text-sm leading-relaxed">
               Este caminho é guiado pela colaboração, participação acessível e supervisão apropriada. 
               Cada etapa pode ser adaptada conforme as necessidades da comunidade.
             </p>

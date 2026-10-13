@@ -90,7 +90,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex justify-center mb-12"
         >
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -98,7 +98,7 @@ export default function HeroSection() {
               className="w-16 h-16 rounded-full bg-navy-800 flex items-center justify-center border-2 border-ivory/30 overflow-hidden"
             >
               <Image
-                src="/images/favicon.png"
+                src="/favicon.png"
                 alt="IAS Logo"
                 width={48}
                 height={48}
@@ -107,7 +107,7 @@ export default function HeroSection() {
             </motion.div>
             <div className="hidden md:block text-left">
               <span className="font-serif text-ivory text-sm tracking-wider">Instituto de</span>
-              <span className="font-serif text-ivory text-2xl font-bold leading-none">Aprendizado Social</span>
+              <span className="font-serif text-ivory text-base font-bold leading-none">Aprendizado Social</span>
             </div>
           </div>
         </motion.div>

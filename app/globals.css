@@ -53,19 +53,61 @@
   }
   
   .glass {
-    background: rgba(255, 255, 255, 0.75);
-    box-shadow: 0 8px 32px rgba(8, 43, 104, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 30px rgba(8, 43, 104, 0.12), 0 2px 6px rgba(8, 43, 104, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    position: relative;
+  }
+  
+  @supports not (backdrop-filter: blur(16px)) {
+    .glass {
+      background: rgba(255, 255, 255, 0.98);
+    }
+  }
+  
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
   
   .glass-dark {
-    background: rgba(8, 43, 104, 0.3);
-    box-shadow: 0 8px 32px rgba(8, 43, 104, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(8, 43, 104, 0.95);
+    box-shadow: 0 10px 30px rgba(8, 43, 104, 0.2), 0 2px 6px rgba(8, 43, 104, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+  }
+  
+  @supports not (backdrop-filter: blur(20px)) {
+    .glass-dark {
+      background: rgba(8, 43, 104, 0.98);
+    }
+  }
+  
+  .glass-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
   
   .blue-glow {
@@ -88,5 +130,15 @@
     padding: 1px;
     background: linear-gradient(45deg, transparent, rgba(19, 154, 205, 0.4), transparent);
     z-index: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

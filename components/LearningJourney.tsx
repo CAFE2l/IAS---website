@@ -1,7 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, TestTube, Users, Share2 } from 'lucide-react';
 
 const journeySteps = [
@@ -31,14 +30,22 @@ const journeySteps = [
   },
 ];
 
-const stepColors = ['bg-navy-700', 'bg-navy-600', 'bg-navy-500', 'bg-navy-400'];
-
 export default function LearningJourney() {
-  const [activeStep, setActiveStep] = useState<number | null>(null);
+  const prefersReduced = useReducedMotion();
 
   return (
-    <section id="como-funciona" className="py-24 px-4 bg-ivory">
-      <div className="max-w-6xl mx-auto">
+    <section 
+      id="como-funciona" 
+      className="py-24 px-4 bg-ivory relative overflow-hidden"
+      style={{ scrollMarginTop: '100px' }}
+    >
+      {/* Background gradient orbs for glass effect visibility */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-navy-200/20 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -47,11 +54,17 @@ export default function LearningJourney() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-block mb-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="inline-block mb-4"
+          >
             <span className="text-sm font-sans text-navy-600 tracking-wider uppercase">
               Como funciona
             </span>
-          </div>
+          </motion.div>
           <motion.h2
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -75,21 +88,39 @@ export default function LearningJourney() {
 
         {/* Journey Diagram */}
         <div className="relative">
-          {/* Mobile: Vertical Line */}
-          <div className="md:hidden">
-            <div className="absolute left-1/2 top-12 bottom-12 w-1 bg-navy-300/50 transform -translate-x-1/2 z-0" />
+          {/* Mobile: Vertical Line on left */}
+          <div className="md:hidden absolute left-8 top-16 bottom-16 w-0.5 bg-gradient-to-b from-navy-300/50 via-blue-400/50 to-navy-300/50 z-0" />
+          
+          {/* Animated pulse on mobile line */}
+          {!prefersReduced && (
+            <motion.div
+              className="md:hidden absolute left-8 w-0.5 bg-blue-400/80 z-0"
+              style={{ top: '16%', height: '2px' }}
+              animate={{ top: ['16%', '84%'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          )}
+
+          {/* Desktop: Horizontal Connector Line */}
+          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 z-0 transform -translate-y-1/2">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/40 to-transparent" />
+            
+            {/* Animated pulse traveling along the line */}
+            {!prefersReduced && (
+              <motion.div
+                className="absolute top-1/2 w-12 h-0.5 bg-blue-400/80 blur-sm"
+                style={{ transform: 'translateY(-50%)' }}
+                animate={{ left: ['0%', '100%'] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            )}
           </div>
 
-          {/* Desktop: Horizontal Line - positioned based on icon center */}
-          <div className="hidden md:block">
-            {/* Line container that spans from icon center to icon center */}
-            <div className="absolute top-1/2 left-12 right-12 h-1 bg-navy-300/50 transform -translate-y-1/2 z-0" />
-          </div>
-
-          {/* Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+          {/* Steps Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
             {journeySteps.map((step, index) => {
               const Icon = step.icon;
+              
               return (
                 <motion.div
                   key={step.id}
@@ -97,33 +128,72 @@ export default function LearningJourney() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                  className="text-center"
-                  onMouseEnter={() => setActiveStep(step.id)}
-                  onMouseLeave={() => setActiveStep(null)}
+                  className="relative"
                 >
-                  {/* Icon Container */}
+                  {/* Glass Card */}
                   <motion.div
-                    className={`w-20 h-20 mx-auto rounded-full ${stepColors[index]} flex items-center justify-center transition-all duration-300`}
+                    className="glass rounded-2xl p-6 h-full flex flex-col items-center text-center relative overflow-hidden"
+                    initial={{ rotateX: 0, rotateY: 0 }}
+                    whileHover={prefersReduced ? {} : {
+                      rotateX: 2,
+                      rotateY: 2,
+                      scale: 1.02,
+                      boxShadow: '0 15px 40px rgba(8, 43, 104, 0.15), 0 4px 12px rgba(8, 43, 104, 0.1)',
+                    }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                     style={{
-                      boxShadow: activeStep === step.id 
-                        ? '0 0 20px rgba(19, 154, 205, 0.6)'
-                        : '0 4px 16px rgba(8, 43, 104, 0.2)',
+                      transformStyle: 'preserve-3d',
+                      perspective: '1000px',
                     }}
                   >
-                    <Icon className="w-8 h-8 text-ivory" />
-                  </motion.div>
+                    {/* Inner highlight for 3D effect */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent pointer-events-none" />
+                    
+                    {/* Step Number Badge */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.4 + index * 0.1, type: 'spring' }}
+                      className="w-8 h-8 rounded-full bg-navy-800 text-ivory flex items-center justify-center font-bold text-sm mb-4 shadow-lg"
+                      style={{ 
+                        boxShadow: '0 0 12px rgba(8, 43, 104, 0.4)',
+                      }}
+                    >
+                      {step.id}
+                    </motion.div>
 
-                  {/* Content */}
-                  <h3 className="font-serif text-navy-900 text-2xl mb-3 mt-4">{step.title}</h3>
-                  <motion.p
-                    className="font-sans text-navy-600 text-sm leading-relaxed px-4"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                  >
-                    {step.description}
-                  </motion.p>
+                    {/* Icon Container */}
+                    <motion.div
+                      className="w-16 h-16 rounded-full bg-gradient-to-br from-navy-700 to-navy-900 flex items-center justify-center mb-4 relative"
+                      style={{
+                        boxShadow: '0 4px 16px rgba(8, 43, 104, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1)',
+                      }}
+                      whileHover={prefersReduced ? {} : {
+                        boxShadow: '0 0 20px rgba(19, 154, 205, 0.5), 0 4px 16px rgba(8, 43, 104, 0.3)',
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Icon className="w-8 h-8 text-ivory" aria-hidden="true" />
+                      
+                      {/* LED glow ring */}
+                      {!prefersReduced && (
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-blue-400/30"
+                          animate={{ 
+                            boxShadow: ['0 0 0px rgba(19, 154, 205, 0)', '0 0 8px rgba(19, 154, 205, 0.3)', '0 0 0px rgba(19, 154, 205, 0)'],
+                          }}
+                          transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
+                        />
+                      )}
+                    </motion.div>
+
+                    {/* Content */}
+                    <h3 className="font-serif text-navy-900 text-xl mb-3">{step.title}</h3>
+                    <p className="font-sans text-navy-600 text-sm leading-relaxed flex-1">
+                      {step.description}
+                    </p>
+                  </motion.div>
                 </motion.div>
               );
             })}

@@ -7,7 +7,6 @@ import HeroSection from '../components/HeroSection';
 import ProposalSection from '../components/ProposalSection';
 import LearningJourney from '../components/LearningJourney';
 import ExperienceEcosystem from '../components/ExperienceEcosystem';
-import PlatformPreview from '../components/PlatformPreview';
 import PortfolioSection from '../components/PortfolioSection';
 import ResponsibleAISection from '../components/ResponsibleAISection';
 import RoadmapSection from '../components/RoadmapSection';
@@ -58,7 +57,6 @@ export default function HomePage() {
         <ProposalSection />
         <LearningJourney />
         <ExperienceEcosystem />
-        <PlatformPreview />
         <PortfolioSection />
         <ResponsibleAISection />
         <RoadmapSection />

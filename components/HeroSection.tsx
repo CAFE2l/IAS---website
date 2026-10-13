@@ -90,14 +90,12 @@ export default function HeroSection() {
               transition={{ duration: 0.6, delay: 0.3, type: 'spring', stiffness: 100 }}
               className="relative w-16 h-16 rounded-full border-2 border-ivory/30 overflow-hidden"
             >
-              {/* White version of the icon (favicon2.png) for the dark background.
-                  The Image fills the whole circle. Adjust scale-125 (1.1 to 1.5) until no empty edge shows. */}
               <Image
-                src="/favicon2.png"
+                src="/favicon.png"
                 alt="IAS Logo"
                 fill
                 sizes="64px"
-                className="object-cover scale-125"
+                className="object-cover"
                 priority
               />
             </motion.div>

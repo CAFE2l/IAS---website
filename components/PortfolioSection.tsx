@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface ProjectCardProps {
   title: string;
@@ -16,21 +17,21 @@ const placeholderProjects = [
     title: 'Mapeamento de Rotas Sustentáveis',
     description: 'Projeto de análise de impacto ambiental para redes de ônibus urbanas, desenvolvido durante o Workshop de Dados Sustentáveis.',
     category: 'Sustentabilidade',
-    imageSrc: '/placeholder1',
+    imageSrc: '/banners/bus.png',
   },
   {
     id: 2,
     title: 'Jardim Comunitário Digital',
     description: 'Plataforma colaborativa para gestão de hortas urbanas, facilitando o compartilhamento de sementes e conhecimentos.',
     category: 'Comunidade',
-    imageSrc: '/placeholder2',
+    imageSrc: '/banners/digital_garden.png',
   },
   {
     id: 3,
     title: 'Narrativas da Resistência',
     description: 'Coletânea de histórias orais sobre educação popular, compilada e disseminada por meio de podcast e webdocumentário.',
     category: 'Cultura',
-    imageSrc: '/placeholder3',
+    imageSrc: '/banners/test.png',
   },
 ];
 
@@ -46,11 +47,20 @@ function ProjectCard({ title, description, category, imageSrc, delay }: ProjectC
     >
       <div className="bg-ivory rounded-2xl overflow-hidden shadow-lg border border-navy-100/50 transition-all duration-300">
         {/* Image Area */}
-        <div className="relative h-48 bg-gradient-to-br from-navy-100 via-navy-200 to-navy-300 flex items-center justify-center">
-          <div className="text-navy-600 font-serif text-sm text-center px-4">
-            <span className="block mb-2">[Imagem do projeto]</span>
-            <span className="text-navy-800 font-bold">{title}</span>
-          </div>
+        <div className="relative h-48 bg-gradient-to-br from-navy-100 via-navy-200 to-navy-300">
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt={title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover object-center"
+            />
+          ) : (
+            <div className="text-navy-600 font-serif text-sm text-center px-4 h-full flex items-center justify-center">
+              <span className="text-navy-800 font-bold">{title}</span>
+            </div>
+          )}
           
           {/* Overlay on hover */}
           <motion.div

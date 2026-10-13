@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 
 const floatingY = [
@@ -90,7 +91,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex justify-center mb-12"
         >
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-4">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -102,13 +103,10 @@ export default function HeroSection() {
                 alt="IAS Logo"
                 width={48}
                 height={48}
-                className="object-contain"
+                className="object-cover"
               />
             </motion.div>
-            <div className="hidden md:block text-left">
-              <span className="font-serif text-ivory text-sm tracking-wider">Instituto de</span>
-              <span className="font-serif text-ivory text-base font-bold leading-none">Aprendizado Social</span>
-            </div>
+            <span className="font-serif text-ivory text-xl font-bold leading-tight">Instituto de Aprendizado Social</span>
           </div>
         </motion.div>
 
@@ -141,23 +139,23 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <motion.a
-            href="#proposta"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center justify-center px-8 py-4 bg-navy-800 hover:bg-navy-700 text-ivory font-sans font-semibold rounded-full transition-colors duration-200 shadow-lg"
-          >
-            Conheça a proposta
-          </motion.a>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/cadastro"
+              className="inline-flex items-center justify-center px-8 py-4 bg-navy-800 hover:bg-navy-700 text-ivory font-sans font-semibold rounded-full transition-colors duration-200 shadow-lg"
+            >
+              Experimentar
+            </Link>
+          </motion.div>
           
-          <motion.a
-            href="#como-funciona"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center justify-center px-8 py-4 bg-ivory/20 hover:bg-ivory/30 text-ivory font-sans font-semibold rounded-full transition-colors duration-200 border border-ivory/30"
-          >
-            Explorar a experiência
-          </motion.a>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center px-8 py-4 border border-ivory/30 rounded-full bg-ivory/20 hover:bg-ivory/30 text-ivory font-sans font-semibold transition-colors duration-200"
+            >
+              Entrar
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
 

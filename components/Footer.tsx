@@ -26,16 +26,15 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="flex items-center space-x-2 mb-4">
-              <span className="font-serif text-ivory text-2xl font-bold leading-none">IAS</span>
-              <span className="font-serif text-ivory text-sm tracking-wider">Instituto de Aprendizado Social</span>
+            <div className="mb-4">
+              <span className="font-serif text-ivory text-xl font-bold leading-tight">Instituto de Aprendizado Social</span>
             </div>
             <motion.p
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="font-sans text-ivory/70 text-sm leading-relaxed"
+              className="font-sans text-ivory/70 text-sm leading-relaxed max-w-xs"
             >
               Um ponto de encontro para transformar conhecimento em experiência, 
               conectar pessoas e construir possibilidades por meio da colaboração.

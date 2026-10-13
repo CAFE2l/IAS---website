@@ -12,6 +12,11 @@ const navItems = [
   { name: 'Princípios', href: '#principios' },
 ];
 
+const authItems = [
+  { name: 'Entrar', href: '/login' },
+  { name: 'Experimentar', href: '/cadastro', primary: true },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,11 +30,11 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-ivory/95 backdrop-blur-md shadow-md' : 'bg-transparent'}`}>
+    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-ivory/95 backdrop-blur-md shadow-md' : 'bg-gradient-to-b from-black/30 to-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -41,7 +46,7 @@ export default function Navbar() {
                 alt="IAS Logo"
                 width={40}
                 height={40}
-                className="object-contain"
+                className="object-cover"
               />
             </motion.div>
             <span className="hidden sm:block font-serif text-xl font-bold transition-colors duration-300" style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}>
@@ -50,7 +55,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8 items-center">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -61,6 +66,14 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+            {/* Entrar link */}
+            <Link
+              href="/login"
+              className="font-sans text-sm transition-colors duration-300"
+              style={{ color: scrolled ? '#082B68' : '#FFFBF3' }}
+            >
+              Entrar
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -104,6 +117,14 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
+          <Link
+            key="entrar"
+            href="/login"
+            className="block text-navy-900 hover:text-navy-600 font-sans transition-colors duration-200 py-2"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Entrar
+          </Link>
         </nav>
       </motion.div>
     </header>
